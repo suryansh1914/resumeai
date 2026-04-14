@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeAI Builder</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="bldr-app">
+
+  <!-- Header -->
+  <header class="bldr-hdr">
+    <a href="index.html" class="bldr-logo">✨ <span class="grad-text">ResumeAI</span></a>
+    <div class="prog" id="progress">
+      <div class="ps active" data-step="1" onclick="goStep(1)"><div class="ps-num">1</div><span>Personal</span></div>
+      <div class="pd"></div>
+      <div class="ps" data-step="2" onclick="goStep(2)"><div class="ps-num">2</div><span>Education</span></div>
+      <div class="pd"></div>
+      <div class="ps" data-step="3" onclick="goStep(3)"><div class="ps-num">3</div><span>Experience</span></div>
+      <div class="pd"></div>
+      <div class="ps" data-step="4" onclick="goStep(4)"><div class="ps-num">4</div><span>Projects</span></div>
+      <div class="pd"></div>
+      <div class="ps" data-step="5" onclick="goStep(5)"><div class="ps-num">5</div><span>Skills</span></div>
+      <div class="pd"></div>
+      <div class="ps" data-step="6" onclick="goStep(6)"><div class="ps-num">6</div><span>Generate</span></div>
+    </div>
+    <a href="index.html" class="btn btn-ghost btn-sm">← Back</a>
+  </header>
+
+  <!-- Main -->
+  <div class="bldr-main">
+
+    <!-- Form Panel -->
+    <div class="form-panel">
+
+      <!-- Step 1: Personal Info -->
+      <div class="fstep active" id="step-1">
+        <div class="sh"><h2>👤 Personal Info</h2><p>Apni basic details bharo — resume header mein show hogi.</p></div>
+        <div class="fgrid">
+          <div class="fg"><label class="label">Full Name *</label><input type="text" class="inp" id="p-name" placeholder="Rahul Sharma"></div>
+          <div class="fg"><label class="label">Target Role *</label><input type="text" class="inp" id="p-role" placeholder="Software Engineer"></div>
+          <div class="fg"><label class="label">Email *</label><input type="email" class="inp" id="p-email" placeholder="rahul@email.com"></div>
+          <div class="fg"><label class="label">Phone</label><input type="text" class="inp" id="p-phone" placeholder="+91 98765 43210"></div>
+          <div class="fg"><label class="label">Location</label><input type="text" class="inp" id="p-loc" placeholder="Bangalore, India"></div>
+          <div class="fg"><label class="label">LinkedIn URL</label><input type="text" class="inp" id="p-linkedin" placeholder="linkedin.com/in/rahul"></div>
+          <div class="fg"><label class="label">GitHub URL</label><input type="text" class="inp" id="p-github" placeholder="github.com/rahul"></div>
+          <div class="fg"><label class="label">Portfolio / Website</label><input type="text" class="inp" id="p-portfolio" placeholder="rahul.dev"></div>
+        </div>
+        <div class="fnav">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Education -->
+      <div class="fstep" id="step-2">
+        <div class="sh"><h2>Education</h2><p>Add your educational background. Start with the most recent.</p></div>
+        <div id="edu-list"></div>
+        <button class="add-btn" onclick="addEdu()">+ Add Education</button>
+        <div class="fnav">
+          <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Experience -->
+      <div class="fstep" id="step-3">
+        <div class="sh"><h2>Work Experience</h2><p>Add internships, jobs, or freelance work. AI will enhance your descriptions.</p></div>
+        <div id="exp-list"></div>
+        <button class="add-btn" onclick="addExp()">+ Add Experience</button>
+        <div class="fnav">
+          <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Projects -->
+      <div class="fstep" id="step-4">
+        <div class="sh"><h2>Projects</h2><p>Showcase your best work. AI will write compelling descriptions.</p></div>
+        <div id="proj-list"></div>
+        <button class="add-btn" onclick="addProj()">+ Add Project</button>
+        <div class="fnav">
+          <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Skills -->
+      <div class="fstep" id="step-5">
+        <div class="sh"><h2>Skills</h2><p>Add your technical and soft skills. Press Enter after each skill.</p></div>
+        <div class="fg" style="margin-bottom:1.5rem">
+          <label class="label">Technical Skills (Languages, Frameworks, Tools)</label>
+          <div class="skills-box" id="tech-skills-box" onclick="document.getElementById('tech-inp').focus()">
+            <input type="text" class="sinp" id="tech-inp" placeholder="Type a skill and press Enter..." onkeydown="addSkill(event,'tech')">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="label">Soft Skills</label>
+          <div class="skills-box" id="soft-skills-box" onclick="document.getElementById('soft-inp').focus()">
+            <input type="text" class="sinp" id="soft-inp" placeholder="Leadership, Communication..." onkeydown="addSkill(event,'soft')">
+          </div>
+        </div>
+        <div class="fnav">
+          <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Generate -->
+      <div class="fstep" id="step-6">
+        <div class="sh"><h2>Generate Resume</h2><p>AI will now enhance your content and build your resume.</p></div>
+        <div class="gen-sec" id="gen-idle">
+          <div class="gen-icon">✨</div>
+          <p style="color:var(--text2);margin-bottom:1.5rem">All set! Click below to let AI work its magic on your resume.</p>
+          <button class="btn btn-primary btn-lg" onclick="generateResume()" id="gen-btn">🚀 Generate My Resume</button>
+        </div>
+        <div id="gen-loading" style="display:none">
+          <div class="gen-sec">
+            <div class="gen-icon" style="animation:fl 2s ease-in-out infinite">🧠</div>
+            <p style="font-weight:600;margin-bottom:.5rem">AI is crafting your resume...</p>
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div class="gen-log" id="gen-log">
+              <div class="gl-item" id="gl-1">⏳ Analyzing your experience...</div>
+              <div class="gl-item" id="gl-2">⏳ Writing professional summary...</div>
+              <div class="gl-item" id="gl-3">⏳ Enhancing bullet points...</div>
+              <div class="gl-item" id="gl-4">⏳ Optimizing for ATS...</div>
+              <div class="gl-item" id="gl-5">⏳ Finalizing resume...</div>
+            </div>
+          </div>
+        </div>
+        <div id="gen-done" style="display:none">
+          <div class="gen-sec">
+            <div class="gen-icon">🎉</div>
+            <p style="font-weight:600;font-size:1.1rem;margin-bottom:.5rem">Your resume is ready!</p>
+            <p style="color:var(--text2);margin-bottom:1.5rem">Check the preview on the right and download your PDF.</p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+              <button class="btn btn-primary btn-lg" onclick="downloadPDF()">⬇ Download PDF</button>
+              <button class="btn btn-secondary" onclick="saveToCloud()" id="save-btn">☁ Save to Cloud</button>
+              <button class="btn btn-secondary" onclick="resetGen()">✏ Edit & Regenerate</button>
+            </div>
+          </div>
+        </div>
+        <div class="fnav">
+          <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+        </div>
+      </div>
+
+    </div><!-- /form-panel -->
+
+    <!-- Preview Panel -->
+    <div class="prev-panel">
+      <div class="prev-hdr">
+        <span>📄 Live Preview</span>
+        <div class="prev-acts">
+          <button class="btn btn-sm btn-secondary" onclick="downloadPDF()" id="dl-btn" style="display:none">⬇ PDF</button>
+        </div>
+      </div>
+      <div class="prev-body">
+        <div class="prev-empty" id="prev-empty">
+          <div class="prev-empty-icon">📋</div>
+          <p>Fill in your details to see a live preview of your resume.</p>
+        </div>
+        <div id="resume-preview" style="display:none"></div>
+      </div>
+    </div>
+
+  </div><!-- /bldr-main -->
+</div><!-- /bldr-app -->
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script src="js/builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ResumeAI - Build ATS-optimized resumes in minutes using Google Gemini AI. Free AI resume builder for students and professionals.">
+  <title>ResumeAI — Build Your Dream Resume with AI</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<nav class="nav" id="nav">
+  <a href="index.html" class="logo">✨ <span class="grad-text">ResumeAI</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li id="nav-auth-link"><a href="auth.html" class="btn btn-ghost btn-sm">Sign In</a></li>
+    <li><a href="builder.html" class="btn btn-primary btn-sm">Build Resume →</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">🟢 Powered by NVIDIA NIM × Qwen 3.5 397B</div>
+      <h1>Build a Killer Resume<br><span class="grad-text">in 5 Minutes</span> with AI</h1>
+      <p class="hero-desc">Stop struggling with resume writing. Our AI turns your raw experience into powerful, ATS-optimized bullet points that get you interviews.</p>
+      <div class="hero-btns">
+        <a href="builder.html" class="btn btn-primary btn-lg" id="hero-cta">🚀 Build My Resume — Free</a>
+        <a href="#how" class="btn btn-secondary btn-lg">See How It Works</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n">10K+</div><div class="stat-l">Resumes Built</div></div>
+        <div class="stat"><div class="stat-n">95%</div><div class="stat-l">ATS Pass Rate</div></div>
+        <div class="stat"><div class="stat-n">3x</div><div class="stat-l">More Interviews</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="sec">
+    <div class="sec-hd">
+      <div class="sec-tag">Features</div>
+      <h2 class="sec-title">Everything to <span class="grad-text">Land the Job</span></h2>
+      <p class="sec-desc">Our AI doesn't just format a resume — it rewrites your experience to highlight your biggest wins.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card glass"><div class="feat-icon">🧠</div><h3>AI-Powered Content</h3><p>Gemini AI transforms rough descriptions into compelling, achievement-driven bullet points with quantifiable results.</p></div>
+      <div class="feat-card glass"><div class="feat-icon">✅</div><h3>ATS Optimized</h3><p>Clean formatting with keyword optimization built in. Pass every applicant tracking system with confidence.</p></div>
+      <div class="feat-card glass"><div class="feat-icon">⚡</div><h3>5-Minute Build</h3><p>Fill in your details, click generate, and download. No design skills needed, no hours wasted on blank pages.</p></div>
+      <div class="feat-card glass"><div class="feat-icon">📄</div><h3>1-Click PDF Export</h3><p>Download a pixel-perfect PDF ready to send to any employer. No watermarks, no subscriptions.</p></div>
+      <div class="feat-card glass"><div class="feat-icon">🎯</div><h3>Professional Summary</h3><p>AI writes a custom professional summary tailored to your target role, making you stand out instantly.</p></div>
+      <div class="feat-card glass"><div class="feat-icon">🔒</div><h3>Private by Design</h3><p>We don't store your data. Everything runs in your browser. Your resume stays private, always.</p></div>
+    </div>
+  </section>
+
+  <section id="how" class="sec">
+    <div class="sec-hd">
+      <div class="sec-tag">Process</div>
+      <h2 class="sec-title">How It <span class="grad-text">Works</span></h2>
+      <p class="sec-desc">Three simple steps from zero to interview-ready.</p>
+    </div>
+    <div class="steps-wrap">
+      <div class="step-item"><div class="step-n">1</div><h3>Fill Your Details</h3><p>Enter your education, experience, projects, and skills using our guided form.</p></div>
+      <div class="step-item"><div class="step-n">2</div><h3>AI Enhances It</h3><p>Gemini AI rewrites and optimizes every section for maximum impact and ATS compatibility.</p></div>
+      <div class="step-item"><div class="step-n">3</div><h3>Download & Apply</h3><p>Get your polished PDF resume and start applying with confidence.</p></div>
+    </div>
+  </section>
+
+  <section class="cta-wrap">
+    <div class="cta-box">
+      <h2>Ready to Build Your <span class="grad-text">Dream Resume?</span></h2>
+      <p>Join thousands of students who've landed their dream jobs with ResumeAI.</p>
+      <a href="builder.html" class="btn btn-primary btn-lg">✨ Start Building — It's Free</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Built with ❤️ using GitHub Education Pack &nbsp;•&nbsp; © 2024 ResumeAI</p>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }});
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feat-card, .step-item').forEach(el => {
+    el.style.opacity='0'; el.style.transform='translateY(20px)'; el.style.transition='all 0.5s ease';
+    obs.observe(el);
+  });
+
+  // Auth-aware nav
+  const SUPA_URL = 'https://fcjtdngwgdmokdjctglt.supabase.co';
+  const SUPA_KEY = 'sb_publishable_DCJ0v-_vROz0wEYH0KNBZQ_ghis05OD';
+  const _sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  _sb.auth.getSession().then(({ data: { session } }) => {
+    const authLi = document.getElementById('nav-auth-link');
+    if (session) {
+      const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+      authLi.innerHTML = `<a href="dashboard.html" class="btn btn-ghost btn-sm">👤 ${name.split(' ')[0]}</a>`;
+    }
+  });
+</script>
+</body>
+</html>
