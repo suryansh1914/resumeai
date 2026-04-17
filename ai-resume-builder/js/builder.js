@@ -28,7 +28,68 @@ const S = {
 window.addEventListener('DOMContentLoaded', () => {
   S.apiKey = _K;
   S.step = 1;
-  addEdu(); addExp(); addProj();
+  
+  const prefillStr = sessionStorage.getItem('resume_prefill');
+  if (prefillStr) {
+    try {
+      const d = JSON.parse(prefillStr);
+      document.getElementById('p-name').value = d.name || '';
+      document.getElementById('p-email').value = d.email || '';
+      document.getElementById('p-phone').value = d.phone || '';
+      document.getElementById('p-loc').value = d.location || '';
+      document.getElementById('p-linkedin').value = d.linkedin || '';
+      document.getElementById('p-github').value = d.github || '';
+      document.getElementById('p-portfolio').value = d.portfolio || '';
+      document.getElementById('p-role').value = d.role || '';
+      
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+      
+      (d.education || []).forEach(e => {
+        addEdu();
+        setVal('edu-uni-' + S.eduCount, e.university);
+        setVal('edu-deg-' + S.eduCount, e.degree);
+        setVal('edu-major-' + S.eduCount, e.major);
+        setVal('edu-year-' + S.eduCount, e.year);
+        setVal('edu-gpa-' + S.eduCount, e.gpa);
+        setVal('edu-courses-' + S.eduCount, e.courses);
+      });
+      
+      (d.experience || []).forEach(e => {
+        addExp();
+        setVal('exp-co-' + S.expCount, e.company);
+        setVal('exp-role-' + S.expCount, e.role);
+        setVal('exp-start-' + S.expCount, e.start);
+        setVal('exp-end-' + S.expCount, e.end);
+        setVal('exp-desc-' + S.expCount, e.desc || (e.bullets ? e.bullets.join('\\n') : ''));
+      });
+      
+      (d.projects || []).forEach(p => {
+        addProj();
+        setVal('proj-name-' + S.projCount, p.name);
+        setVal('proj-tech-' + S.projCount, p.tech);
+        setVal('proj-gh-' + S.projCount, p.github);
+        setVal('proj-live-' + S.projCount, p.live);
+        setVal('proj-desc-' + S.projCount, p.desc || (p.bullets ? p.bullets.join('\\n') : ''));
+      });
+      
+      (d.techSkills || []).forEach(s => {
+        document.getElementById('tech-inp').value = s;
+        addSkill({key: 'Enter', preventDefault: ()=>{}}, 'tech');
+      });
+      (d.softSkills || []).forEach(s => {
+        document.getElementById('soft-inp').value = s;
+        addSkill({key: 'Enter', preventDefault: ()=>{}}, 'soft');
+      });
+      
+      sessionStorage.removeItem('resume_prefill');
+    } catch(e) {
+      console.error(e);
+      addEdu(); addExp(); addProj();
+    }
+  } else {
+    addEdu(); addExp(); addProj();
+  }
+  
   updatePreview();
   setInterval(updatePreview, 2000);
 });
@@ -131,8 +192,8 @@ function addSkill(e, type) {
   const box = document.getElementById(type + '-skills-box');
   const tag = document.createElement('div');
   tag.className = 'stag';
-  tag.id = 'stag-' + type + '-' + val.replace(/\s+/g, '-');
-  tag.innerHTML = `${val}<span onclick="removeSkill('${type}','${val}')">✕</span>`;
+  tag.id = 'stag-' + type + '-' + val.replace(/\\s+/g, '-');
+  tag.innerHTML = `${esc(val)}<span onclick="removeSkill('${type}','${val.replace(/'/g, "\\\\'")}')">✕</span>`;
   box.insertBefore(tag, inp);
   inp.value = '';
 }
@@ -319,26 +380,31 @@ function renderFinalPreview(d) {
   document.getElementById('resume-preview').innerHTML = buildResumeHTML(d, true);
 }
 
+const esc = (str) => {
+  if (typeof str !== 'string') return str;
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+};
+
 function buildResumeHTML(d, isAI) {
   let html = `<div class="rdoc" id="resume-doc">`;
 
   // Header
-  html += `<div class="rname">${d.name || 'Your Name'}</div>`;
+  html += `<div class="rname">${esc(d.name) || 'Your Name'}</div>`;
   const contact = [];
-  if (d.email) contact.push(`<a href="mailto:${d.email}">${d.email}</a>`);
-  if (d.phone) contact.push(d.phone);
-  if (d.location) contact.push(d.location);
-  if (d.linkedin) contact.push(`<a href="https://${d.linkedin.replace(/^https?:\/\//,'')}" target="_blank">LinkedIn</a>`);
-  if (d.github) contact.push(`<a href="https://${d.github.replace(/^https?:\/\//,'')}" target="_blank">GitHub</a>`);
-  if (d.portfolio) contact.push(`<a href="https://${d.portfolio.replace(/^https?:\/\//,'')}" target="_blank">Portfolio</a>`);
+  if (d.email) contact.push(`<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>`);
+  if (d.phone) contact.push(esc(d.phone));
+  if (d.location) contact.push(esc(d.location));
+  if (d.linkedin) contact.push(`<a href="https://${esc(d.linkedin).replace(/^https?:\/\//,'')}" target="_blank">LinkedIn</a>`);
+  if (d.github) contact.push(`<a href="https://${esc(d.github).replace(/^https?:\/\//,'')}" target="_blank">GitHub</a>`);
+  if (d.portfolio) contact.push(`<a href="https://${esc(d.portfolio).replace(/^https?:\/\//,'')}" target="_blank">Portfolio</a>`);
   if (contact.length) html += `<div class="rcontact">${contact.join(' | ')}</div>`;
   html += `<hr>`;
 
   // Summary
   if (d.summary) {
-    html += `<div class="rtitle">Professional Summary</div><div class="rsummary">${d.summary}</div>`;
+    html += `<div class="rtitle">Professional Summary</div><div class="rsummary">${esc(d.summary)}</div>`;
   } else if (d.role) {
-    html += `<div class="rtitle">Professional Summary</div><div class="rsummary">Motivated ${d.role} with hands-on experience in building scalable solutions. Looking to contribute technical skills to a forward-thinking organization.</div>`;
+    html += `<div class="rtitle">Professional Summary</div><div class="rsummary">Motivated ${esc(d.role)} with hands-on experience in building scalable solutions. Looking to contribute technical skills to a forward-thinking organization.</div>`;
   }
 
   // Experience
@@ -346,11 +412,11 @@ function buildResumeHTML(d, isAI) {
   if (exps.length) {
     html += `<div class="rtitle">Work Experience</div>`;
     exps.forEach(e => {
-      html += `<div class="rentry"><div class="rehdr"><span class="rco">${e.company}</span><span class="rdate">${e.start || ''}${e.end ? ' – ' + e.end : ''}</span></div><div class="rrole">${e.role}</div>`;
+      html += `<div class="rentry"><div class="rehdr"><span class="rco">${esc(e.company)}</span><span class="rdate">${esc(e.start) || ''}${e.end ? ' – ' + esc(e.end) : ''}</span></div><div class="rrole">${esc(e.role)}</div>`;
       if (isAI && e.bullets?.length) {
-        html += `<ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+        html += `<ul>${e.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`;
       } else if (e.desc) {
-        html += `<ul>${e.desc.split(/\n|\./).filter(s=>s.trim().length>10).slice(0,3).map(b=>`<li>${b.trim()}</li>`).join('')}</ul>`;
+        html += `<ul>${e.desc.split(/\\n|\\./).filter(s=>s.trim().length>10).slice(0,3).map(b=>`<li>${esc(b.trim())}</li>`).join('')}</ul>`;
       }
       html += `</div>`;
     });
@@ -361,8 +427,8 @@ function buildResumeHTML(d, isAI) {
   if (edus.length) {
     html += `<div class="rtitle">Education</div>`;
     edus.forEach(e => {
-      html += `<div class="rentry"><div class="rehdr"><span class="rco">${e.university}</span><span class="rdate">${e.year || ''}</span></div><div class="rrole">${e.degree || ''}${e.major ? ' in ' + e.major : ''}${e.gpa ? ' | GPA: ' + e.gpa : ''}</div>`;
-      if (e.courses) html += `<div style="font-size:.74rem;color:#555">Coursework: ${e.courses}</div>`;
+      html += `<div class="rentry"><div class="rehdr"><span class="rco">${esc(e.university)}</span><span class="rdate">${esc(e.year) || ''}</span></div><div class="rrole">${esc(e.degree) || ''}${e.major ? ' in ' + esc(e.major) : ''}${e.gpa ? ' | GPA: ' + esc(e.gpa) : ''}</div>`;
+      if (e.courses) html += `<div style="font-size:.74rem;color:#555">Coursework: ${esc(e.courses)}</div>`;
       html += `</div>`;
     });
   }
@@ -372,15 +438,15 @@ function buildResumeHTML(d, isAI) {
   if (projs.length) {
     html += `<div class="rtitle">Projects</div>`;
     projs.forEach(p => {
-      html += `<div class="rentry"><div class="rehdr"><span class="rco">${p.name}</span>${p.tech ? `<span class="rdate">${p.tech}</span>` : ''}</div>`;
+      html += `<div class="rentry"><div class="rehdr"><span class="rco">${esc(p.name)}</span>${p.tech ? `<span class="rdate">${esc(p.tech)}</span>` : ''}</div>`;
       const links = [];
-      if (p.github) links.push(`<a href="https://${p.github.replace(/^https?:\/\//,'')}" style="color:#4338ca;font-size:.73rem">GitHub</a>`);
-      if (p.live) links.push(`<a href="https://${p.live.replace(/^https?:\/\//,'')}" style="color:#4338ca;font-size:.73rem">Live Demo</a>`);
+      if (p.github) links.push(`<a href="https://${esc(p.github).replace(/^https?:\/\//,'')}" style="color:#4338ca;font-size:.73rem">GitHub</a>`);
+      if (p.live) links.push(`<a href="https://${esc(p.live).replace(/^https?:\/\//,'')}" style="color:#4338ca;font-size:.73rem">Live Demo</a>`);
       if (links.length) html += `<div style="margin-bottom:.25rem">${links.join(' • ')}</div>`;
       if (isAI && p.bullets?.length) {
-        html += `<ul>${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+        html += `<ul>${p.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`;
       } else if (p.desc) {
-        html += `<ul>${p.desc.split(/\n|\./).filter(s=>s.trim().length>10).slice(0,2).map(b=>`<li>${b.trim()}</li>`).join('')}</ul>`;
+        html += `<ul>${p.desc.split(/\\n|\\./).filter(s=>s.trim().length>10).slice(0,2).map(b=>`<li>${esc(b.trim())}</li>`).join('')}</ul>`;
       }
       html += `</div>`;
     });
@@ -389,8 +455,8 @@ function buildResumeHTML(d, isAI) {
   // Skills
   if (d.techSkills?.length || d.softSkills?.length) {
     html += `<div class="rtitle">Skills</div><div class="rskills">`;
-    if (d.techSkills?.length) html += `<div class="rskrow"><span class="rsklbl">Technical:</span><span class="rskval">${d.techSkills.join(', ')}</span></div>`;
-    if (d.softSkills?.length) html += `<div class="rskrow"><span class="rsklbl">Soft Skills:</span><span class="rskval">${d.softSkills.join(', ')}</span></div>`;
+    if (d.techSkills?.length) html += `<div class="rskrow"><span class="rsklbl">Technical:</span><span class="rskval">${esc(d.techSkills.join(', '))}</span></div>`;
+    if (d.softSkills?.length) html += `<div class="rskrow"><span class="rsklbl">Soft Skills:</span><span class="rskval">${esc(d.softSkills.join(', '))}</span></div>`;
     html += `</div>`;
   }
 
@@ -462,7 +528,7 @@ function toast(msg, type = 'success') {
   const wrap = document.getElementById('toasts');
   const t = document.createElement('div');
   t.className = `toast ${type}`;
-  t.innerHTML = `${type === 'success' ? '✅' : '❌'} ${msg}`;
+  t.textContent = `${type === 'success' ? '✅' : '❌'} ${msg}`;
   wrap.appendChild(t);
   setTimeout(() => t.remove(), 3500);
 }

@@ -34,7 +34,11 @@
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "SAMEORIGIN",
-    "Cache-Control": "max-age=86400"
+    "Cache-Control": "max-age=86400",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+    "Content-Security-Policy": "default-src 'self' 'unsafe-inline' https://fcjtdngwgdmokdjctglt.supabase.co https://integrate.api.nvidia.com wss://fcjtdngwgdmokdjctglt.supabase.co https://cdn.jsdelivr.net;",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
   },
   "mimeTypes": {
     ".json": "text/json"
