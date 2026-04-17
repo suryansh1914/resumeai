@@ -1,16 +1,5 @@
 {
   "version": 2,
-  "cleanUrls": false,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/builder", "destination": "/builder.html" },
-    { "source": "/auth", "destination": "/auth.html" },
-    { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/robots.txt" },
-    { "source": "/google9e52fdc01ce61271.html", "destination": "/google9e52fdc01ce61271.html" },
-    { "source": "/", "destination": "/index.html" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
