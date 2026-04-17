@@ -1,7 +1,5 @@
 // ======= CONFIG =======
-const NVIDIA_BASE = 'https://integrate.api.nvidia.com/v1/chat/completions';
-const QWEN_MODEL  = 'qwen/qwen3.5-397b-a17b';
-const _K = ['nvapi-7TxCkZBbI6Yu1QSMq','NDHyN0suSjrZlClORLo7','d2eI58NvJKzTRtMvp-6Pre87q6P'].join('');
+const BACKEND_URL = '/api/generate';
 
 // ======= SUPABASE =======
 const SUPA_URL = 'https://fcjtdngwgdmokdjctglt.supabase.co';
@@ -26,7 +24,6 @@ const S = {
 
 // ======= INIT =======
 window.addEventListener('DOMContentLoaded', () => {
-  S.apiKey = _K;
   S.step = 1;
   
   const prefillStr = sessionStorage.getItem('resume_prefill');
@@ -303,22 +300,12 @@ Rules for bullet points:
 - Make them ATS-optimized`;
 
   try {
-    const res = await fetch(NVIDIA_BASE, {
+    const res = await fetch(BACKEND_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${S.apiKey}`
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: QWEN_MODEL,
-        messages: [
-          { role: 'system', content: 'You are a professional resume writer. Always respond with ONLY valid JSON, no markdown, no explanation.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.6,
-        max_tokens: 2048,
-        stream: false
-      })
+      body: JSON.stringify({ prompt })
     });
 
     if (!res.ok) {
