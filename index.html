@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="manifest" href="manifest.json">
   <meta name="google-site-verification" content="4kCMkMjJuMJacMiTFEyIs8dYKm7Otfc-4zi_dA1f5-4" />
   
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fcjtdngwgdmokdjctglt.supabase.co" crossorigin>
+  <link rel="dns-prefetch" href="https://fcjtdngwgdmokdjctglt.supabase.co">
   <!-- Primary Meta Tags -->
   <title>ResumeAI — Free AI Resume Builder</title>
   <meta name="title" content="ResumeAI — Free AI Resume Builder">
@@ -50,6 +55,29 @@
     }
   }
   </script>
+
+  <!-- FAQ Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "Is ResumeAI completely free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! ResumeAI is a 100% free AI resume maker. You can build, optimize, and download your resume without paying any subscriptions."
+      }
+    }, {
+      "@type": "Question",
+      "name": "How does the AI optimize my resume for ATS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our NVIDIA AI engine strictly structures your resume using industry-standard ATS parsing formats, injecting semantic action verbs and keywords."
+      }
+    }]
+  }
+  </script>
 </head>
 <body>
 
@@ -62,10 +90,10 @@
 <nav class="nav" id="nav">
   <a href="index.html" class="logo">✨ <span class="grad-text">ResumeAI</span></a>
   <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how">How It Works</a></li>
-    <li id="nav-auth-link"><a href="auth.html" class="btn btn-ghost btn-sm">Sign In</a></li>
-    <li><a href="builder.html" class="btn btn-primary btn-sm">Build Resume →</a></li>
+    <li><a href="#features" aria-label="View Features">Features</a></li>
+    <li><a href="#how" aria-label="Learn how it works">How It Works</a></li>
+    <li id="nav-auth-link"><a href="auth.html" class="btn btn-ghost btn-sm" aria-label="Sign In to your account">Sign In</a></li>
+    <li><a href="builder.html" class="btn btn-primary btn-sm" aria-label="Start building your resume">Build Resume →</a></li>
   </ul>
 </nav>
 
@@ -113,6 +141,24 @@
       <div class="step-item"><div class="step-n">1</div><h3>Fill Your Details</h3><p>Enter your education, experience, projects, and skills using our guided form.</p></div>
       <div class="step-item"><div class="step-n">2</div><h3>AI Enhances It</h3><p>Gemini AI rewrites and optimizes every section for maximum impact and ATS compatibility.</p></div>
       <div class="step-item"><div class="step-n">3</div><h3>Download & Apply</h3><p>Get your polished PDF resume and start applying with confidence.</p></div>
+    </div>
+  </section>
+
+  <section id="faq" class="sec">
+    <div class="sec-hd">
+      <div class="sec-tag">FAQ</div>
+      <h2 class="sec-title">Common <span class="grad-text">Questions</span></h2>
+      <p class="sec-desc">Everything you need to know about our Free AI Resume Builder.</p>
+    </div>
+    <div class="feat-grid" style="grid-template-columns: 1fr;">
+      <div class="feat-card glass" style="text-align: left;">
+        <h3 style="margin-top: 0;">Is ResumeAI completely free to use?</h3>
+        <p style="margin-bottom: 0;">Yes! ResumeAI is a 100% free AI resume maker. You can build, optimize, and download your resume without paying any subscriptions.</p>
+      </div>
+      <div class="feat-card glass" style="text-align: left;">
+        <h3 style="margin-top: 0;">How does the AI optimize my resume for ATS?</h3>
+        <p style="margin-bottom: 0;">Our NVIDIA AI engine strictly structures your resume using industry-standard ATS parsing formats, injecting semantic action verbs and keywords.</p>
+      </div>
     </div>
   </section>
 
