@@ -6,6 +6,9 @@
     { "source": "/builder", "destination": "/ai-resume-builder/builder.html" },
     { "source": "/auth", "destination": "/ai-resume-builder/auth.html" },
     { "source": "/dashboard", "destination": "/ai-resume-builder/dashboard.html" },
+    { "source": "/sitemap.xml", "destination": "/ai-resume-builder/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/ai-resume-builder/robots.txt" },
+    { "source": "/google9e52fdc01ce61271.html", "destination": "/ai-resume-builder/google9e52fdc01ce61271.html" },
     { "source": "/", "destination": "/ai-resume-builder/index.html" }
   ],
   "headers": [
