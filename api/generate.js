@@ -1,3 +1,26 @@
+// Rate Limiter Memory Cache
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_REQUESTS = 5; // 5 reqs per minute
+const ipMap = new Map();
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  if (!ipMap.has(ip)) {
+    ipMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return false;
+  }
+  const record = ipMap.get(ip);
+  if (now > record.resetTime) {
+    ipMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return false;
+  }
+  if (record.count >= MAX_REQUESTS) {
+    return true; // Rate Limited
+  }
+  record.count++;
+  return false;
+}
+
 export default async function handler(req, res) {
   // CORS Headers for safety (though mostly accessed from same domain)
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -10,6 +33,12 @@ export default async function handler(req, res) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  // --- RATE LIMITING ---
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: 'Too Many Requests. Please wait a minute before trying again.' });
   }
 
   const { prompt, forceText } = req.body;
