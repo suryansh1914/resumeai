@@ -48,6 +48,7 @@
           <div class="fg"><label class="label">LinkedIn URL</label><input type="text" class="inp" id="p-linkedin" placeholder="linkedin.com/in/rahul"></div>
           <div class="fg"><label class="label">GitHub URL</label><input type="text" class="inp" id="p-github" placeholder="github.com/rahul"></div>
           <div class="fg"><label class="label">Portfolio / Website</label><input type="text" class="inp" id="p-portfolio" placeholder="rahul.dev"></div>
+          <div class="fg fw" style="margin-top:1rem;"><label class="label">Target Job Description (Optional)</label><textarea class="ta" id="p-jd" placeholder="Paste the JD here. Our AI will tailor your generated resume to match these exact keywords!"></textarea></div>
         </div>
         <div class="fnav">
           <div></div>
@@ -139,7 +140,8 @@
             <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
               <button class="btn btn-primary btn-lg" onclick="downloadPDF()">⬇ Download PDF</button>
               <button class="btn btn-secondary" onclick="saveToCloud()" id="save-btn">☁ Save to Cloud</button>
-              <button class="btn btn-secondary" onclick="resetGen()">✏ Edit & Regenerate</button>
+              <button class="btn btn-secondary" onclick="generateCoverLetter()" id="cl-btn" style="background:var(--prim);color:#000;border:none;">✍️ Get Cover Letter</button>
+              <button class="btn btn-secondary" onclick="resetGen()">✏ Edit</button>
             </div>
           </div>
         </div>
@@ -169,6 +171,18 @@
 
   </div><!-- /bldr-main -->
 </div><!-- /bldr-app -->
+
+<!-- Cover Letter Modal -->
+<div id="cl-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:var(--bg2);padding:2rem;border-radius:1rem;max-width:600px;width:100%;border:1px solid var(--border);">
+    <h3 style="margin-top:0;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+      <span>✉️ Tailored Cover Letter</span>
+      <button onclick="document.getElementById('cl-modal').style.display='none'" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1.2rem;">✕</button>
+    </h3>
+    <textarea id="cl-ta" class="ta" style="height:350px;margin-bottom:1rem;font-family:inherit;font-size:0.9rem;" readonly></textarea>
+    <button class="btn btn-primary" style="width:100%" onclick="navigator.clipboard.writeText(document.getElementById('cl-ta').value); toast('Copied to clipboard!', 'success');">📋 Copy to Clipboard</button>
+  </div>
+</div>
 
 <div class="toast-wrap" id="toasts"></div>
 

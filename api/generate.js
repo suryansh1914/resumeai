@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { prompt } = req.body;
+  const { prompt, forceText } = req.body;
   if (!prompt) {
     return res.status(400).json({ error: 'Missing prompt data' });
   }
@@ -21,6 +21,10 @@ export default async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ error: 'Server misconfiguration: API key is missing' });
   }
+
+  const systemMsg = forceText 
+    ? "You are an expert career coach. Output ONLY plain text, no markdown formatting."
+    : "You are a professional resume writer. Always respond with ONLY valid JSON, no markdown, no explanation.";
 
   try {
     const nvidiaReq = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
@@ -32,7 +36,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'qwen/qwen3.5-397b-a17b',
         messages: [
-          { role: 'system', content: 'You are a professional resume writer. Always respond with ONLY valid JSON, no markdown, no explanation.' },
+          { role: 'system', content: systemMsg },
           { role: 'user', content: prompt }
         ],
         temperature: 0.6,

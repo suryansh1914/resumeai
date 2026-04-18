@@ -233,7 +233,7 @@ function collectData() {
 
   return {
     name: g('p-name'), role: g('p-role'), email: g('p-email'), phone: g('p-phone'),
-    location: g('p-loc'), linkedin: g('p-linkedin'), github: g('p-github'), portfolio: g('p-portfolio'),
+    location: g('p-loc'), linkedin: g('p-linkedin'), github: g('p-github'), portfolio: g('p-portfolio'), jd: g('p-jd'),
     education: edu, experience: exp, projects: proj,
     techSkills: S.techSkills, softSkills: S.softSkills
   };
@@ -260,6 +260,9 @@ async function generateResume() {
   animLogs(0);
 
   const prompt = `You are a professional resume writer. Based on the user's info, generate enhanced resume content.
+
+Target Job Description (JD) to tailor towards:
+${data.jd ? data.jd : "No specific JD provided."}
 
 User Info:
 Name: ${data.name}
@@ -297,6 +300,7 @@ Rules for bullet points:
 - Add quantifiable results where possible (e.g., "reduced load time by 40%")
 - Keep each bullet under 15 words
 - Maximum 3 bullets per entry
+- CRITICALLY IMPORTANT: If a Target Job Description is provided above, you MUST organically weave matching keywords from the JD into the bullets and summary to ensure it passes ATS filters for that specific role.
 - Make them ATS-optimized`;
 
   try {
@@ -518,4 +522,53 @@ function toast(msg, type = 'success') {
   t.textContent = `${type === 'success' ? '✅' : '❌'} ${msg}`;
   wrap.appendChild(t);
   setTimeout(() => t.remove(), 3500);
+}
+
+// ======= COVER LETTER =======
+async function generateCoverLetter() {
+  const data = S.generated || collectData();
+  if (!data.name) { toast('Please generate your resume first.', 'error'); return; }
+
+  const btn = document.getElementById('cl-btn');
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+
+  const prompt = `Write a compelling, professional cover letter for the following user, applying for their Target Role.
+
+User Information:
+Name: ${data.name}
+Role: ${data.role || 'Professional'}
+Key Experience: ${JSON.stringify(data.experience)}
+Key Skills: ${data.techSkills.join(', ')}
+
+Target Job Description:
+${data.jd ? data.jd : "No specific JD provided."}
+
+Instructions:
+- Write a 3 to 4 paragraph cover letter.
+- Tone should be confident, professional, and engaging.
+- If a Target Job Description is provided, explicitly connect their experience to the requirements in the JD.
+- Return ONLY the raw text of the cover letter. No explanations.
+- Do not include [Date] or [Employer Name] at the top, write it so it can be pasted directly into an email body or form with minimal edits. Start with "Dear Hiring Manager,"`;
+
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, forceText: true })
+    });
+
+    if (!res.ok) throw new Error('API Error');
+    const json = await res.json();
+    let text = json.choices?.[0]?.message?.content || '';
+    
+    document.getElementById('cl-ta').value = text.trim();
+    document.getElementById('cl-modal').style.display = 'flex';
+    toast('Cover Letter Generated! ✨', 'success');
+  } catch (err) {
+    toast('Error generating Cover Letter', 'error');
+  } finally {
+    btn.textContent = '✍️ Get Cover Letter';
+    btn.disabled = false;
+  }
 }
