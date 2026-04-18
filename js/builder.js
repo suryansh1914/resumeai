@@ -4,7 +4,12 @@ const BACKEND_URL = '/api/generate';
 // ======= SUPABASE =======
 const SUPA_URL = 'https://fcjtdngwgdmokdjctglt.supabase.co';
 const SUPA_KEY = 'sb_publishable_DCJ0v-_vROz0wEYH0KNBZQ_ghis05OD';
-const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const cookieStorage = {
+  getItem: (k) => { const v = document.cookie.split('; ').find(r => r.startsWith(k+'=')); return v ? decodeURIComponent(v.split('=')[1]) : null; },
+  setItem: (k, v) => document.cookie = `${k}=${encodeURIComponent(v)}; path=/; max-age=31536000; SameSite=Lax; Secure`,
+  removeItem: (k) => document.cookie = `${k}=; path=/; max-age=0; SameSite=Lax; Secure`
+};
+const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { storage: cookieStorage } });
 let _currentUser = null;
 supabase.auth.getSession().then(({ data: { session } }) => {
   _currentUser = session?.user || null;
