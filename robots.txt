@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://suryaai.app/sitemap.xml
+Sitemap: https://suryaai-resume-builder.vercel.app/sitemap.xml
